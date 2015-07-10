@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' type='css' href='styles.css'>
+  </head>
+  <body>
+    <script src="lib/d3.js" charset="utf-8"></script>
+    <script>
+      var test = d3.select('body').selectAll('div')
+        .data([{name: 'darryl', loc: 144}, {name: 'adnan', loc: 345}], function(d) {return d.name })
+        .enter().append('div')
+        .text(function(d){
+          return 'Name: ' + d.name + ', loc: '+d.loc;
+        });
+
+      test.data([{name: 'adnan', loc: 1000}, {name: 'darryl', loc: 2000}], function(d){return d.name})
+        .text(function(d){
+          return 'Name: ' + d.name + ', loc: '+d.loc;
+        });
+
+      
+    </script>
+
+    <div>test</div>
+  </body>
+</html>
