@@ -33,14 +33,25 @@ var svg = d3.select("body")
 function generateEnemies(numEnemies) {
   var results = [];
   for (var i = 0; i < numEnemies; i++) {
-    var x = Math.random() * gameOptions.height;
-    var y = Math.random() * gameOptions.width;
+    var x = Math.random() * gameOptions.width;
+    var y = Math.random() * gameOptions.height;
     results.push(new Enemy(x, y));
   };
   return results;
 }
 
-// setInterval(function()
+
+setInterval(function() {
+  svg.data(generateEnemies(gameOptions.numEnemies))
+    .transition()
+    .duration(2000)
+    .attr({
+      x: function(d){ return d.x},
+      y: function(d){ return d.y},
+      height: 20,
+      width: 20
+    });
+}, 3000);
 
 
 
