@@ -4,12 +4,12 @@
 var gameOptions = {
   height: 500,
   width: 800,
+  numEnemies: 20
 }
 
-var Circle = function(x, y, r) {
+var Enemy = function(x, y) {
   this.x = x;
   this.y = y;
-  this.r = r;
 
 }
 
@@ -17,11 +17,40 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width", gameOptions.width)
             .attr("height", gameOptions.height)
-            .selectAll('.asteroid').data([{x: 100, y:40, r:20}])
+            .selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
             .enter()
             .append('svg:image')
             .attr('xlink:href', 'asteroid.png')
-            .attr({width: 50, height: 50});
+            .attr('class','enemy')
+            .attr({
+              x: function(d){ return d.x},
+              y: function(d){ return d.y},
+              height: 20,
+              width: 20
+            });
+
+
+function generateEnemies(numEnemies) {
+  var results = [];
+  for (var i = 0; i < numEnemies; i++) {
+    var x = Math.random() * gameOptions.height;
+    var y = Math.random() * gameOptions.width;
+    results.push(new Enemy(x, y));
+  };
+  return results;
+}
+
+// setInterval(function()
 
 
 
+/*
+At a certain interval (one second), go through all of your enemies,
+give them random x and y values, and have them transition to those values
+
+You select svg, selectAll enemies, pass in data that are a new set of
+n (number of enemies) random x, y value pairs
+
+A helpful function would be one that spits out an array of objects 
+that contain random x, y pairs
+*/
