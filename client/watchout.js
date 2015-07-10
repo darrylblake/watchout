@@ -17,17 +17,41 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width", gameOptions.width)
             .attr("height", gameOptions.height)
-            .selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
-            .enter()
-            .append('svg:image')
-            .attr('xlink:href', 'asteroid.png')
-            .attr('class','enemy')
-            .attr({
-              x: function(d){ return d.x},
-              y: function(d){ return d.y},
-              height: 20,
-              width: 20
-            });
+
+svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
+    .enter()
+    .append('svg:image')
+    .attr('xlink:href', 'asteroid.png')
+    .attr('class','enemy')
+    .attr({
+      x: function(d){ return d.x},
+      y: function(d){ return d.y},
+      height: 20,
+      width: 20
+    });
+
+var user = svg.data([{cx:0, cy:0}]).append('circle')
+  .attr({
+    cx: 350,
+    cy: 250,
+    r: 20
+  })
+
+var drag = d3.behavior.drag()
+  .on('drag', function(d){
+    d.cx += d3.event.dx;
+    d.cy += d3.event.dy;
+    
+    d3.select(this).attr('transform', function(d){
+      return "translate(" + [d.cx, d.cy] +")"
+    })
+  });
+
+user.call(drag);
+
+user.on("click", function() {
+  console.log('clicked');
+});
 
 
 function generateEnemies(numEnemies) {
@@ -42,7 +66,7 @@ function generateEnemies(numEnemies) {
 
 
 setInterval(function() {
-  svg.data(generateEnemies(gameOptions.numEnemies))
+  svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
     .transition()
     .duration(2000)
     .attr({
