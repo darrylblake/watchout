@@ -2,6 +2,27 @@
 
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
+
+svg.collided {
+  background: url('http://media.giphy.com/media/KJCs3EFsQ8jF6/giphy.gif');
+  background-size: cover;
+}
+
+.scoreboard {
+  position: absolute;
+  right: 0;
+  top: 15px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px dotted green;
+}
+
+.scoreboard div {
+  margin: 10px;
+  font-family: Arial;
+
+}
+
+
 .enemy {
   -webkit-animation: rotating 2s linear infinite;
   -moz-animation: rotating 2s linear infinite;
@@ -46,3 +67,4 @@ Feel free to use it if you like. */
     transform: rotate(360deg);
   }
 }
+
