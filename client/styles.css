@@ -11,21 +11,38 @@ svg.collided {
 svg {
   background: url('background.jpg');
   background-size: cover;
+  margin: 0 auto;
+  display: block;
 }
 
+
+.stage {
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 0 auto;
+  width: 800px;
+}
 .scoreboard {
   position: absolute;
   right: left;
   font-family: Arial;
   background: rgba(255, 255, 255, 0.8);
-  
+  border-radius: 0 0 15px 0; 
 }
 
 .scoreboard div {
   padding: 5px 10px;
   float: left;
   margin-right: 1px;
+}
 
+.scoreboard span {
+  color: orange;
+  -webkit-transition:color 1s ease;
+  transition:color 500ms ease;
+}
+.scoreboard .newhighscore {
+  color: green;
 }
 
 

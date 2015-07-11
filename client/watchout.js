@@ -1,5 +1,4 @@
 // start slingin' some d3 here.
-// <svg> ..<circle x="220" y="30" r="20" style="stroke: #000000; stroke-width: 3; fill: #6666ff;"/>
 var collisions = 0;
 var highScore = d3.select('.high span').data([0]);
 var currentScore = d3.select('.current span').data([0]);
@@ -7,7 +6,7 @@ var currentScore = d3.select('.current span').data([0]);
 var gameOptions = {
   height: 600,
   width: 800,
-  numEnemies: 1,
+  numEnemies: 15,
   enemSize: 50
 }
 
@@ -19,7 +18,7 @@ var Enemy = function(x, y, size) {
   this.colliding = false;
 }
 
-var svg = d3.select("body")
+var svg = d3.select(".stage")
             .append("svg")
             .attr("width", gameOptions.width)
             .attr("height", gameOptions.height)
@@ -36,7 +35,7 @@ svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
           });
     
 
-var user = svg.data([{x:400, y:400, size:50}]).append('svg:image')
+var user = svg.data([{x:400, y:400, size:100}]).append('svg:image')
   .attr('xlink:href', 'user.png')
   .attr({
     x: function(d){return d.x},
@@ -61,12 +60,6 @@ var drag = d3.behavior.drag()
     if(d.y > 0 && d.y < gameOptions.height)
       d3.select(this).attr('y',d.y);
   })
-  .on('dragstart', function(){
-    d3.select(this).attr('fill','deepPink');
-  })
-  .on('dragend', function(){
-    d3.select(this).attr('fill','black');
-  });
 
 user.call(drag);
 
@@ -87,9 +80,9 @@ function detectCollision(enemy, user) {
   var userData = user.data()[0];
 
   var x1 = Number(enemy.attributes.x.value) + (0.5*gameOptions.enemSize)
-  var x2 = userData.x + 25;
+  var x2 = userData.x + userData.size / 2;
   var y1 = Number(enemy.attributes.y.value)  + (0.5*gameOptions.enemSize)
-  var y2 = userData.y + 25;
+  var y2 = userData.y + userData.size / 2;
   var d = new Date();
   var distance = Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2)) - (gameOptions.enemSize)/2 - userData.size/2;
   
@@ -97,14 +90,15 @@ function detectCollision(enemy, user) {
   if (distance <= 0 && !enemy.colliding) {
     if (highScore.data()[0] < currentScore.data()[0]){
       highScore.data([currentScore.data()[0]])
-        .text(function(d){return d});
+        .text(function(d){return d})
     }
     currentScore.data([0])
       .text(function(d){return d});
+    
     collisions++;
     enemy.colliding = true;
     d3.select('svg').classed('collided', true);
-    d3.select('.collisions').text("Collisions: "+collisions);
+    d3.select('.collisions span').text(collisions);
   }
   if (distance > 0 && enemy.colliding) {
     enemy.colliding = false;
