@@ -1,14 +1,14 @@
 // start slingin' some d3 here.
-// <svg> ..<circle cx="220" cy="30" r="20" style="stroke: #000000; stroke-width: 3; fill: #6666ff;"/>
+// <svg> ..<circle x="220" y="30" r="20" style="stroke: #000000; stroke-width: 3; fill: #6666ff;"/>
 var collisions = 0;
 var highScore = d3.select('.high span').data([0]);
 var currentScore = d3.select('.current span').data([0]);
 
 var gameOptions = {
-  height: 500,
+  height: 600,
   width: 800,
-  numEnemies: 20,
-  enemSize: 20
+  numEnemies: 1,
+  enemSize: 50
 }
 
 var Enemy = function(x, y, size) {
@@ -27,7 +27,7 @@ var svg = d3.select("body")
 svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
     .enter()
     .append('svg:image')
-    .attr('xlink:href', 'asteroid.png')
+    .attr('xlink:href', 'star.png')
     .attr('class','enemy')
     .attr({ x: function(d){ return d.x},
             y: function(d){ return d.y},
@@ -36,28 +36,30 @@ svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
           });
     
 
-var user = svg.data([{cx:400, cy:400, r: 20}]).append('circle')
+var user = svg.data([{x:400, y:400, size:50}]).append('svg:image')
+  .attr('xlink:href', 'user.png')
   .attr({
-    cx: function(d){return d.cx},
-    cy: function(d){return d.cy},
-    r: function(d){return d.r}
+    x: function(d){return d.x},
+    y: function(d){return d.y},
+    width: function(d){return d.size},
+    height: function(d){return d.size},
   })
 
 var drag = d3.behavior.drag()
   .on('drag', function(d){
 
     
-      d.cx += d3.event.dx;
-      d.cy += d3.event.dy;
+      d.x += d3.event.dx;
+      d.y += d3.event.dy;
         
     // d3.select(this).attr('transform', function(d){ // ??
-    //   return "translate(" + [d.cx, d.cy] +")"
+    //   return "translate(" + [d.x, d.y] +")"
     // })
-    if(d.cx > 0 && d.cx < gameOptions.width)
-      d3.select(this).attr('cx',d.cx);
+    if(d.x > 0 && d.x < gameOptions.width)
+      d3.select(this).attr('x',d.x);
 
-    if(d.cy > 0 && d.cy < gameOptions.height)
-      d3.select(this).attr('cy',d.cy);
+    if(d.y > 0 && d.y < gameOptions.height)
+      d3.select(this).attr('y',d.y);
   })
   .on('dragstart', function(){
     d3.select(this).attr('fill','deepPink');
@@ -79,16 +81,17 @@ function generateEnemies(numEnemies) {
   return results;
 }
 
+var speed = 3000;
+
 function detectCollision(enemy, user) {
   var userData = user.data()[0];
 
   var x1 = Number(enemy.attributes.x.value) + (0.5*gameOptions.enemSize)
-  var x2 = userData.cx;
+  var x2 = userData.x + 25;
   var y1 = Number(enemy.attributes.y.value)  + (0.5*gameOptions.enemSize)
-  var y2 = userData.cy;
-  //debugger;
+  var y2 = userData.y + 25;
   var d = new Date();
-  var distance = Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2)) - (gameOptions.enemSize)/2 - userData.r;
+  var distance = Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2)) - (gameOptions.enemSize)/2 - userData.size/2;
   
   // if distance <=0 and ! has Class collision
   if (distance <= 0 && !enemy.colliding) {
@@ -113,12 +116,10 @@ function detectCollision(enemy, user) {
 setInterval(function() {
   svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
     .transition()
-    .duration(3000)
+    .duration(speed)
     .attr({
       x: function(d){ return d.x},
       y: function(d){ return d.y},
-      height: 20,
-      width: 20
     });
 }, 4000);
 
@@ -136,6 +137,10 @@ setInterval(function() {
     .text(function(d){return d});
   // debugger
 }, 1000)
+
+// setInterval(function(){
+//   gameOptions.numEnemies++
+// }, 3000);
 
 /*
 At a certain interval (one second), go through all of your enemies,

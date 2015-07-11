@@ -4,26 +4,33 @@
 Feel free to use it if you like. */
 
 svg.collided {
-  background: url('http://media.giphy.com/media/KJCs3EFsQ8jF6/giphy.gif');
+  background: url('collide.jpg');
+  background-size: cover;
+}
+
+svg {
+  background: url('background.jpg');
   background-size: cover;
 }
 
 .scoreboard {
   position: absolute;
-  right: 0;
-  top: 15px;
+  right: left;
+  font-family: Arial;
   background: rgba(255, 255, 255, 0.8);
-  border: 2px dotted green;
+  
 }
 
 .scoreboard div {
-  margin: 10px;
-  font-family: Arial;
+  padding: 5px 10px;
+  float: left;
+  margin-right: 1px;
 
 }
 
 
 .enemy {
+  background: blue;
   -webkit-animation: rotating 2s linear infinite;
   -moz-animation: rotating 2s linear infinite;
   -ms-animation: rotating 2s linear infinite;
