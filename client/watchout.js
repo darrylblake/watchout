@@ -65,13 +65,19 @@ var user = svg.data([{cx:400, cy:400, r: 20}]).append('circle')
 
 var drag = d3.behavior.drag()
   .on('drag', function(d){
-    d.cx += d3.event.dx;
-    d.cy += d3.event.dy;
+
+    
+      d.cx += d3.event.dx;
+      d.cy += d3.event.dy;
         
     // d3.select(this).attr('transform', function(d){ // ??
     //   return "translate(" + [d.cx, d.cy] +")"
     // })
-    d3.select(this).attr('cx',d.cx).attr('cy',d.cy)
+    if(d.cx > 0 && d.cx < gameOptions.width)
+      d3.select(this).attr('cx',d.cx);
+
+    if(d.cy > 0 && d.cy < gameOptions.height)
+      d3.select(this).attr('cy',d.cy);
   })
   .on('dragstart', function(){
     d3.select(this).attr('fill','deepPink');
@@ -114,10 +120,12 @@ function detectCollision(enemy, user) {
       .text(function(d){return d});
     collisions++;
     enemy.colliding = true;
+    d3.select('svg').classed('collided', true);
     d3.select('.collisions').text("Collisions: "+collisions);
   }
   if (distance > 0 && enemy.colliding) {
     enemy.colliding = false;
+    d3.select('svg').classed('collided', false);
   }
   // func called collided which adds 1 to collision, and then adds a class of collision
 
