@@ -1,9 +1,7 @@
 // start slingin' some d3 here.
 // <svg> ..<circle cx="220" cy="30" r="20" style="stroke: #000000; stroke-width: 3; fill: #6666ff;"/>
 var collisions = 0;
-
 var highScore = d3.select('.high span').data([0]);
-
 var currentScore = d3.select('.current span').data([0]);
 
 var gameOptions = {
@@ -19,7 +17,6 @@ var Enemy = function(x, y, size) {
   this.y = y;
   this.size = size;
   this.colliding = false;
-
 }
 
 var svg = d3.select("body")
@@ -32,28 +29,11 @@ svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
     .append('svg:image')
     .attr('xlink:href', 'asteroid.png')
     .attr('class','enemy')
-    .attr(
-    /*  function(d) {
-        var obj = {};
-        obj['x'] = d.x;
-        obj['y'] = d.y;
-        obj['height'] = 20;
-        obj['width'] = 20;
-        return obj;
-      }
-      */
-      // See what's wrong with multiple calling the data function
-      // To set height and width attributes
-        {
-          x: function(d){ return d.x},
-          y: function(d){ return d.y},
-          height: gameOptions.enemSize,
-          width: gameOptions.enemSize
-        }
-
-      );
-
-
+    .attr({ x: function(d){ return d.x},
+            y: function(d){ return d.y},
+            height: gameOptions.enemSize,
+            width: gameOptions.enemSize
+          });
     
 
 var user = svg.data([{cx:400, cy:400, r: 20}]).append('circle')
@@ -127,19 +107,9 @@ function detectCollision(enemy, user) {
     enemy.colliding = false;
     d3.select('svg').classed('collided', false);
   }
-  // func called collided which adds 1 to collision, and then adds a class of collision
-
-  // if distance > 0 and has Class collision
-    // remove class collision
-  if (distance < 100)
-    console.log(d.getTime(), "distance: "+Math.floor(distance)+", user x: "+x2+", user y: "+y2);
-    console.log("enemy x: "+x1+", enemy y: "+y1+"\n\n");
-  if(distance <= 0){
-    console.log("COLLISION!!");
-    
-  }
 }
 
+// Set random enemy positions
 setInterval(function() {
   svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
     .transition()
@@ -152,16 +122,14 @@ setInterval(function() {
     });
 }, 4000);
 
-
-
+// Detect Collisions
 setInterval(function() {
-
   svg.selectAll('.enemy').each(function(d){
     detectCollision(this, user);
   });
-
 }, 75);
 
+// Update scores
 setInterval(function() {
   var x = currentScore.data()[0]+1;
   currentScore.data([x])
