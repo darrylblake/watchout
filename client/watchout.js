@@ -32,7 +32,7 @@ svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
 
 var user = svg.data([{cx:0, cy:0}]).append('circle')
   .attr({
-    cx: 350,
+    cx: 500,
     cy: 250,
     r: 20
   })
@@ -41,10 +41,16 @@ var drag = d3.behavior.drag()
   .on('drag', function(d){
     d.cx += d3.event.dx;
     d.cy += d3.event.dy;
-    
-    d3.select(this).attr('transform', function(d){
+        
+    d3.select(this).attr('transform', function(d){ // ??
       return "translate(" + [d.cx, d.cy] +")"
     })
+  })
+  .on('dragstart', function(){
+    d3.select(this).attr('fill','deepPink');
+  })
+  .on('dragend', function(){
+    d3.select(this).attr('fill','black');
   });
 
 user.call(drag);
@@ -68,6 +74,11 @@ function generateEnemies(numEnemies) {
 setInterval(function() {
   svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
     .transition()
+    .tween("attr", function(d) {
+      return function() {
+        detectCollision(d);
+      }
+    })
     .duration(2000)
     .attr({
       x: function(d){ return d.x},
@@ -76,6 +87,10 @@ setInterval(function() {
       width: 20
     });
 }, 3000);
+
+setInterval(function() {
+
+}, 100);
 
 
 
