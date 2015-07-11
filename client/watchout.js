@@ -2,6 +2,10 @@
 // <svg> ..<circle cx="220" cy="30" r="20" style="stroke: #000000; stroke-width: 3; fill: #6666ff;"/>
 var collisions = 0;
 
+var highScore = d3.select('.high span').data([0]);
+
+var currentScore = d3.select('.current span').data([0]);
+
 var gameOptions = {
   height: 500,
   width: 800,
@@ -14,6 +18,7 @@ var Enemy = function(x, y, size) {
   this.x = x;
   this.y = y;
   this.size = size;
+  this.colliding = false;
 
 }
 
@@ -90,43 +95,71 @@ function generateEnemies(numEnemies) {
 
 function detectCollision(enemy, user) {
   var userData = user.data()[0];
-  var x1 = enemy.x;
-  var x2 = userData.cx;
-  
-  var y1 = enemy.y
-  var y2 = userData.cy;
 
+  var x1 = Number(enemy.attributes.x.value) + (0.5*gameOptions.enemSize)
+  var x2 = userData.cx;
+  var y1 = Number(enemy.attributes.y.value)  + (0.5*gameOptions.enemSize)
+  var y2 = userData.cy;
+  //debugger;
   var d = new Date();
-  var distance = Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2)) - (gameOptions.enemSize/2) - userData.r;
+  var distance = Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2)) - (gameOptions.enemSize)/2 - userData.r;
+  
+  // if distance <=0 and ! has Class collision
+  if (distance <= 0 && !enemy.colliding) {
+    if (highScore.data()[0] < currentScore.data()[0]){
+      highScore.data([currentScore.data()[0]])
+        .text(function(d){return d});
+    }
+    currentScore.data([0])
+      .text(function(d){return d});
+    collisions++;
+    enemy.colliding = true;
+    d3.select('.collisions').text("Collisions: "+collisions);
+  }
+  if (distance > 0 && enemy.colliding) {
+    enemy.colliding = false;
+  }
+  // func called collided which adds 1 to collision, and then adds a class of collision
+
+  // if distance > 0 and has Class collision
+    // remove class collision
   if (distance < 100)
     console.log(d.getTime(), "distance: "+Math.floor(distance)+", user x: "+x2+", user y: "+y2);
     console.log("enemy x: "+x1+", enemy y: "+y1+"\n\n");
   if(distance <= 0){
     console.log("COLLISION!!");
-    collisions++;
-    d3.select('.collisions').text(collisions);
+    
   }
 }
 
 setInterval(function() {
   svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
     .transition()
-    .tween("attr", function(d) {
-      return function() {
-        detectCollision(d, user);
-        //the outer function 'd' is each asteroid
-        //you want to compare the distance between each asteroid 
-      }
-    })
-    .duration(2000)
+    .duration(3000)
     .attr({
       x: function(d){ return d.x},
       y: function(d){ return d.y},
       height: 20,
       width: 20
     });
-}, 3000);
+}, 4000);
 
+
+
+setInterval(function() {
+
+  svg.selectAll('.enemy').each(function(d){
+    detectCollision(this, user);
+  });
+
+}, 75);
+
+setInterval(function() {
+  var x = currentScore.data()[0]+1;
+  currentScore.data([x])
+    .text(function(d){return d});
+  // debugger
+}, 1000)
 
 /*
 At a certain interval (one second), go through all of your enemies,
