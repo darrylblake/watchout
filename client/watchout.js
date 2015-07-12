@@ -4,11 +4,12 @@ var highScore = d3.select('.high span').data([0]);
 var currentScore = d3.select('.current span').data([0]);
 
 var gameOptions = {
-  height: 600,
-  width: 800,
+  height: window.innerHeight,
+  width: window.innerWidth,
   numEnemies: 15,
   enemSize: 50
 }
+
 
 var Enemy = function(x, y, size) {
   this.dimensions = [x,y,size];
@@ -23,6 +24,11 @@ var svg = d3.select(".stage")
             .attr("width", gameOptions.width)
             .attr("height", gameOptions.height)
 
+window.onresize=function(){
+  gameOptions.height = window.innerHeight;
+  gameOptions.width = window.innerWidth;
+  svg.attr('width', gameOptions.width).attr('height', gameOptions.height)  
+};
 svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
     .enter()
     .append('svg:image')
@@ -35,7 +41,7 @@ svg.selectAll('.enemy').data(generateEnemies(gameOptions.numEnemies))
           });
     
 
-var user = svg.data([{x:400, y:400, size:100}]).append('svg:image')
+var user = svg.data([{x: 100, y: 100, size:100}]).append('svg:image')
   .attr('xlink:href', 'user.png')
   .attr({
     x: function(d){return d.x},

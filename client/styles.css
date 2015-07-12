@@ -3,31 +3,41 @@
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
+html, body{
+  padding: 0;
+  margin: 0;
+}
+
 svg.collided {
-  background: url('collide.jpg');
+  background: url('collide.jpg') center center;
   background-size: cover;
 }
 
 svg {
-  background: url('background.jpg');
+  background: url('background.jpg') center center;
   background-size: cover;
   margin: 0 auto;
   display: block;
 }
 
+* {
+  box-sizing: border-box;
+}
 
 .stage {
-  border-radius: 15px;
+  
   overflow: hidden;
   margin: 0 auto;
-  width: 800px;
+  
 }
 .scoreboard {
   position: absolute;
   right: left;
+  bottom: 0;
   font-family: Arial;
   background: rgba(255, 255, 255, 0.8);
-  border-radius: 0 0 15px 0; 
+  border-radius: 0 15px 0 0; 
+  font-size: 20px;
 }
 
 .scoreboard div {
